@@ -1,43 +1,58 @@
 package me.hexilee
 
+import me.hexilee.annotations.Elem
 import me.hexilee.annotations.Selector
+import me.hexilee.exceptions.LackAnnotationException
 import kotlin.reflect.full.findAnnotation
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import kotlin.reflect.full.createType
-import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.jvm.javaType
+import org.jsoup.select.Elements
+import kotlin.reflect.KFunction
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.jvmErasure
 
-class HTMLConverter : Converter {
-  private var doc: Element
+class HTMLConverter {
+  val root: Elements
 
   constructor(src: String) {
-    doc = Jsoup.parse(src)
+    root = Elements(Jsoup.parse(src))
   }
 
-  constructor(src: String, root: String) {
-    doc = Jsoup.parse(src).select(root).first()
+  constructor(src: String, rootSelector: String) {
+    root = Jsoup.parse(src).select(rootSelector)
   }
 
-  override fun <T : Any> invoke(instance: T): T {
-    val rootSelector = instance::class.findAnnotation<Selector>()
+  /**
+   * @throws me.hexilee.exceptions.LackAnnotationException
+   */
+  inline fun <reified T : Any> new(): T {
+    return _new(root, T::class.primaryConstructor!!)
+  }
+
+  fun <T : Any> _new(_root: Elements, primaryConstructor: KFunction<T>): T {
+    val rootSelector = primaryConstructor.findAnnotation<Selector>()
+    var rootNodes = _root
     if (rootSelector != null) {
-      doc = doc.select(rootSelector.selector).first()
+      rootNodes = rootNodes.select(rootSelector.selector)
     }
-    for (property in instance::class.declaredMemberProperties) {
-      val memberSelector = property.findAnnotation<Selector>()
-      if (memberSelector != null) {
-        val elements = doc.select(memberSelector.selector)
-        if (isArray(property.returnType)) {
 
-          continue
+    return primaryConstructor.run {
+      call(parameters.stream().map {
+        val parameterType = it.type
+        val paramSelector = parameterType.findAnnotation<Selector>()
+        var nodes = rootNodes
+        if (paramSelector != null) {
+          nodes = nodes.select(paramSelector.selector)
         }
-      }
-    }
-    return instance
-  }
 
+        if (isArray(parameterType)) {
+          val elemClass =
+              parameterType.findAnnotation<Elem>() ?: throw LackAnnotationException(Elem::class)
+          return@map nodes.map { _new(Elements(it), parameterType.jvmErasure.primaryConstructor!!) }
+        }
+
+
+      })
+    }
+  }
 
 }
