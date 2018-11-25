@@ -24,6 +24,9 @@ class HTMLConverterTest {
     </div>
 </body>
 </html>""", "#test").new<SimpleUser>()
+    assertEquals("Hexilee", user.name)
+    assertEquals(20, user.age)
+    assertTrue(user.likeLemon)
   }
 }
 
