@@ -121,7 +121,7 @@ data class Lecture(
 
 data class HomePage(
   @Selector("ul > li")
-  @ArrayType(Int::class)
+  @ArrayType(String::class)
   @Value
   val pages: Array<Int>,
 
