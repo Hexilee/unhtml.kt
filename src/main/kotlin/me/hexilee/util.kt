@@ -17,13 +17,14 @@ import kotlin.reflect.jvm.jvmErasure
 
 fun <T : Any> newData(rootNodes: Elements, primaryConstructor: KFunction<T>): T =
     primaryConstructor.run {
-      call(parameters.stream().map {
+      call(*(parameters.stream().map {
         val paramSelector = it.findAnnotation<Selector>()
         val nodes =
             if (paramSelector == null) rootNodes else rootNodes.select(paramSelector.selector)
 
         if (it.type.jvmErasure.java.isArray) {
-          val arrayType = it.findAnnotation<ArrayType>() ?: throw LackAnnotationException(ArrayType::class)
+          val arrayType =
+              it.findAnnotation<ArrayType>() ?: throw LackAnnotationException(ArrayType::class)
           return@map newArray(nodes, arrayType.elemClass.createType(), it.findAnnotation())
         }
 
@@ -45,7 +46,7 @@ fun <T : Any> newData(rootNodes: Elements, primaryConstructor: KFunction<T>): T 
           return@map rawValue
         }
         throw UnsupportedType(it.type)
-      })
+      }.toArray()))
     }
 
 fun newArray(nodes: Elements, elemType: KType, value: Value?) = nodes.map {
