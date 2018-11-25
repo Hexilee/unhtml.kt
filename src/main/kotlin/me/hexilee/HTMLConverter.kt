@@ -3,6 +3,7 @@ package me.hexilee
 import me.hexilee.annotations.Elem
 import me.hexilee.annotations.Selector
 import me.hexilee.exceptions.LackAnnotationException
+import me.hexilee.exceptions.NotPrimitiveException
 import kotlin.reflect.full.findAnnotation
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
@@ -25,10 +26,10 @@ class HTMLConverter {
    * @throws me.hexilee.exceptions.LackAnnotationException
    */
   inline fun <reified T : Any> new(): T {
-    return _new(root, T::class.primaryConstructor!!)
+    return newObject(root, T::class.primaryConstructor!!)
   }
 
-  fun <T : Any> _new(_root: Elements, primaryConstructor: KFunction<T>): T {
+  fun <T : Any> newObject(_root: Elements, primaryConstructor: KFunction<T>): T {
     val rootSelector = primaryConstructor.findAnnotation<Selector>()
     var rootNodes = _root
     if (rootSelector != null) {
@@ -44,15 +45,13 @@ class HTMLConverter {
           nodes = nodes.select(paramSelector.selector)
         }
 
-        if (isArray(parameterType)) {
+        if (parameterType.jvmErasure.java.isArray) {
           val elemClass =
               parameterType.findAnnotation<Elem>() ?: throw LackAnnotationException(Elem::class)
-          return@map nodes.map { _new(Elements(it), parameterType.jvmErasure.primaryConstructor!!) }
+          return@map nodes.map { newObject(Elements(it), elemClass.kClass.primaryConstructor!!) }
         }
-
-
+        return@map nodes.first()
       })
     }
   }
-
 }
