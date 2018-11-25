@@ -58,13 +58,6 @@ class HTMLConverterTest {
   }
 
   @Test
-  fun testPrimitiveArrayTest() {
-    val a: Any? = arrayOf(1, 2, 3)
-    val user: Any? = SimpleUser("", 20, true)
-    HomePage::class.primaryConstructor?.call(a, user)
-  }
-
-  @Test
   fun primitiveArrayTest() {
     val homePage = HTMLConverter("""<!DOCTYPE html>
 <html lang="en">
@@ -121,7 +114,7 @@ data class Lecture(
 
 data class HomePage(
   @Selector("ul > li")
-  @ArrayType(String::class)
+  @ArrayType(Int::class)
   @Value
   val pages: Array<Int>,
 
