@@ -1,5 +1,6 @@
 package me.hexilee
 
+import me.hexilee.annotations.ArrayType
 import me.hexilee.annotations.InnerText
 import me.hexilee.annotations.Selector
 import me.hexilee.annotations.Value
@@ -8,6 +9,8 @@ import me.hexilee.exceptions.NotPrimitiveException
 import me.hexilee.exceptions.UnsupportedType
 import org.jsoup.select.Elements
 import kotlin.reflect.KFunction
+import kotlin.reflect.KType
+import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.jvmErasure
@@ -20,7 +23,8 @@ fun <T : Any> newData(rootNodes: Elements, primaryConstructor: KFunction<T>): T 
             if (paramSelector == null) rootNodes else rootNodes.select(paramSelector.selector)
 
         if (it.type.jvmErasure.java.isArray) {
-
+          val arrayType = it.findAnnotation<ArrayType>() ?: throw LackAnnotationException(ArrayType::class)
+          return@map newArray(nodes, arrayType.elemClass.createType(), it.findAnnotation())
         }
 
         if (it.type.jvmErasure.isData) {
@@ -43,6 +47,26 @@ fun <T : Any> newData(rootNodes: Elements, primaryConstructor: KFunction<T>): T 
         throw UnsupportedType(it.type)
       })
     }
+
+fun newArray(nodes: Elements, elemType: KType, value: Value?) = nodes.map {
+  if (elemType.jvmErasure.isData) {
+    return@map newData(Elements(it), elemType.jvmErasure.primaryConstructor!!)
+  }
+  val valueAttr = value ?: throw LackAnnotationException(Value::class)
+  val rawValue =
+      if (valueAttr.attr === InnerText && nodes.hasText()) nodes.text() else nodes.attr(
+          valueAttr.attr)
+
+  if (elemType.jvmErasure.java.isPrimitive) {
+    return@map if (elemType.isMarkedNullable) newNullablePrimitive(rawValue,
+        elemType.jvmErasure.java) else newPrimitive(rawValue, elemType.jvmErasure.java)
+  }
+
+  if (elemType.jvmErasure.java.isAssignableFrom(String::class.java)) {
+    return@map rawValue
+  }
+  throw UnsupportedType(elemType)
+}
 
 /**
  * Boolean#TYPE
