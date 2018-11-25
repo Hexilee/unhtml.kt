@@ -25,7 +25,7 @@ fun <T : Any> newData(rootNodes: Elements, primaryConstructor: KFunction<T>): T 
         if (it.type.jvmErasure.java.isArray) {
           val arrayType =
               it.findAnnotation<ArrayType>() ?: throw LackAnnotationException(ArrayType::class)
-          return@map newArray(nodes, arrayType.elemClass.createType(), it.findAnnotation())
+          return@map newArray(nodes, arrayType.elemClass.createType(), it.findAnnotation()) as Any?
         }
 
         if (it.type.jvmErasure.isData) {

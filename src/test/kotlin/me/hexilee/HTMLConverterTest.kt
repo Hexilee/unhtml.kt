@@ -5,6 +5,7 @@ import me.hexilee.annotations.Selector
 import me.hexilee.annotations.Value
 import org.junit.Test
 import org.junit.Assert.*
+import kotlin.reflect.full.primaryConstructor
 
 class HTMLConverterTest {
   @Test
@@ -54,6 +55,13 @@ class HTMLConverterTest {
     assertEquals(20, user.age)
     assertTrue(user.likeLemon)
     assertEquals("Hello World!", lecture.content)
+  }
+
+  @Test
+  fun testPrimitiveArrayTest() {
+    val a: Any? = arrayOf(1, 2, 3)
+    val user: Any? = SimpleUser("", 20, true)
+    HomePage::class.primaryConstructor?.call(a, user)
   }
 
   @Test
