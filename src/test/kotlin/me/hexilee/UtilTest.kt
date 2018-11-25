@@ -5,7 +5,7 @@ import kotlin.reflect.full.createType
 
 class UtilTest {
   @Test
-  fun isArray() {
-    assert(Array<Int>::class.java.isArray)
+  fun isAssignableFromString() {
+    assert(String::class.java.isAssignableFrom(String::class.java))
   }
 }

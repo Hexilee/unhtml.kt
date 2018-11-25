@@ -4,7 +4,6 @@ import me.hexilee.annotations.Selector
 import org.junit.Test
 import org.junit.Assert.*
 
-@Selector("#root")
 data class User(
   @Selector("name")
   val name: String,
