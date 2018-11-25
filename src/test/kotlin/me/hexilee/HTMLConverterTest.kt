@@ -5,7 +5,6 @@ import me.hexilee.annotations.Selector
 import me.hexilee.annotations.Value
 import org.junit.Test
 import org.junit.Assert.*
-import kotlin.reflect.full.primaryConstructor
 
 class HTMLConverterTest {
   @Test
@@ -86,6 +85,49 @@ class HTMLConverterTest {
     assertEquals(20, user.age)
     assertTrue(user.likeLemon)
     assertArrayEquals(arrayOf(0, 1, 2, 3), homePage.pages)
+  }
+
+  @Test
+  fun dataArrayTest() {
+    val userArray = HTMLConverter("""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="test">
+        <p>3</p>
+        <div>
+            <div>
+                <p>Hexilee</p>
+                <p>20</p>
+                <p>true</p>
+            </div>
+            <div>
+                <p>BigBrother</p>
+                <p>20</p>
+                <p>true</p>
+            </div>
+            <div>
+                <p>SecondBrother</p>
+                <p>20</p>
+                <p>false</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>""", "#test > div:nth-child(2) > div").newArray<SimpleUser>()
+    assertEquals(3, userArray.size)
+    assertEquals("Hexilee", userArray[0].name)
+    assertEquals(20, userArray[0].age)
+    assertTrue(userArray[0].likeLemon)
+    assertEquals("BigBrother", userArray[1].name)
+    assertEquals(20, userArray[1].age)
+    assertTrue(userArray[1].likeLemon)
+    assertEquals("SecondBrother", userArray[2].name)
+    assertEquals(20, userArray[2].age)
+    assertFalse(userArray[2].likeLemon)
   }
 }
 
