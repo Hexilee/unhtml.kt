@@ -54,7 +54,7 @@ fun newArray(nodes: Elements, elemType: KType, value: Value?) = nodes.map {
   }
   val valueAttr = value ?: throw LackAnnotationException(Value::class)
   val rawValue =
-      if (valueAttr.attr === InnerText && nodes.hasText()) nodes.text() else nodes.attr(
+      if (valueAttr.attr == InnerText && it.hasText()) it.text() else it.attr(
           valueAttr.attr)
 
   if (elemType.jvmErasure.java.isPrimitive) {
@@ -66,7 +66,7 @@ fun newArray(nodes: Elements, elemType: KType, value: Value?) = nodes.map {
     return@map rawValue
   }
   throw UnsupportedType(elemType)
-}
+}.toTypedArray()
 
 /**
  * Boolean#TYPE
