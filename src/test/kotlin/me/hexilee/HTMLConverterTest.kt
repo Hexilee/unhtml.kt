@@ -28,6 +28,32 @@ class HTMLConverterTest {
     assertEquals(20, user.age)
     assertTrue(user.likeLemon)
   }
+
+  @Test
+  fun embeddedDataTest() {
+    val lecture = HTMLConverter("""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="test">
+        <div>
+            <p>Hexilee</p>
+            <p>20</p>
+            <p>true</p>
+        </div>
+        <p>Hello World!</p>
+    </div>
+</body>
+</html>""", "#test").new<Lecture>()
+    val user = lecture.speaker
+    assertEquals("Hexilee", user.name)
+    assertEquals(20, user.age)
+    assertTrue(user.likeLemon)
+    assertEquals("Hello World!", lecture.content)
+  }
 }
 
 data class SimpleUser(
@@ -42,4 +68,13 @@ data class SimpleUser(
   @Selector("p:nth-child(3)")
   @Value
   val likeLemon: Boolean
+)
+
+data class Lecture(
+  @Selector("#test > div")
+  val speaker: SimpleUser,
+
+  @Selector("#test > p:nth-child(2)")
+  @Value
+  val content: String
 )
