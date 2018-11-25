@@ -34,9 +34,8 @@ fun <T : Any> newData(rootNodes: Elements, primaryConstructor: KFunction<T>): T 
 
         val valueAttr = it.findAnnotation<Value>() ?: throw LackAnnotationException(Value::class)
         val rawValue =
-            if (valueAttr.attr === InnerText && nodes.hasText()) nodes.text() else nodes.attr(
+            if (valueAttr.attr == InnerText && nodes.hasText()) nodes.text() else nodes.attr(
                 valueAttr.attr)
-
         if (it.type.jvmErasure.java.isPrimitive) {
           return@map if (it.type.isMarkedNullable) newNullablePrimitive(rawValue,
               it.type.jvmErasure.java) else newPrimitive(rawValue, it.type.jvmErasure.java)
