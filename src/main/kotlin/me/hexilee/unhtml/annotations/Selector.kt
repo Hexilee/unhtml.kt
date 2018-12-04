@@ -1,4 +1,4 @@
-package me.hexilee.annotations
+package me.hexilee.unhtml.annotations
 
 @Target(AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.VALUE_PARAMETER)
 annotation class Selector(

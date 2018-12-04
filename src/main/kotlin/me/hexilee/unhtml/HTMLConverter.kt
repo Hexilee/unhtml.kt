@@ -1,4 +1,4 @@
-package me.hexilee
+package me.hexilee.unhtml
 
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
@@ -18,7 +18,8 @@ class HTMLConverter {
   /**
    * @throws me.hexilee.exceptions.LackAnnotationException
    */
-  inline fun <reified T : Any> new() = newData(root, T::class.primaryConstructor!!)
+  inline fun <reified T : Any> new() = newData(root,
+      T::class.primaryConstructor!!)
 
   inline fun <reified T : Any> newArray() = root.map {
     newData(Elements(it), T::class.primaryConstructor!!)

@@ -1,4 +1,4 @@
-package me.hexilee.exceptions
+package me.hexilee.unhtml.exceptions
 
 import java.lang.RuntimeException
 import kotlin.reflect.KClass

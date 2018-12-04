@@ -1,12 +1,12 @@
-package me.hexilee
+package me.hexilee.unhtml
 
-import me.hexilee.annotations.ArrayType
-import me.hexilee.annotations.InnerText
-import me.hexilee.annotations.Selector
-import me.hexilee.annotations.Value
-import me.hexilee.exceptions.LackAnnotationException
-import me.hexilee.exceptions.NotPrimitiveException
-import me.hexilee.exceptions.UnsupportedType
+import me.hexilee.unhtml.annotations.ArrayType
+import me.hexilee.unhtml.annotations.InnerText
+import me.hexilee.unhtml.annotations.Selector
+import me.hexilee.unhtml.annotations.Value
+import me.hexilee.unhtml.exceptions.LackAnnotationException
+import me.hexilee.unhtml.exceptions.NotPrimitiveException
+import me.hexilee.unhtml.exceptions.UnsupportedType
 import org.jsoup.select.Elements
 import kotlin.reflect.KFunction
 import kotlin.reflect.KType
@@ -33,7 +33,8 @@ fun <T : Any> newData(rootNodes: Elements, primaryConstructor: KFunction<T>): T 
           if (arrayType.elemClass.java.isPrimitive) {
             if (!arrayType.elemClass.createType().isMarkedNullable) {
               when(arrayType.elemClass.java) {
-                Boolean::class.java -> return@map newBooleanArray(nodes, valueAttr)
+                Boolean::class.java -> return@map newBooleanArray(nodes,
+                    valueAttr)
                 Char::class.java -> return@map newCharArray(nodes, valueAttr)
                 Byte::class.java -> return@map newByteArray(nodes, valueAttr)
                 Short::class.java -> return@map newShortArray(nodes, valueAttr)
@@ -45,14 +46,22 @@ fun <T : Any> newData(rootNodes: Elements, primaryConstructor: KFunction<T>): T 
               }
             } else {
               when(arrayType.elemClass.java) {
-                Boolean::class.java -> return@map newNullableBooleanArray(nodes, valueAttr)
-                Char::class.java -> return@map newNullableCharArray(nodes, valueAttr)
-                Byte::class.java -> return@map newNullableByteArray(nodes, valueAttr)
-                Short::class.java -> return@map newNullableShortArray(nodes, valueAttr)
-                Int::class.java -> return@map newNullableIntArray(nodes, valueAttr)
-                Long::class.java -> return@map newNullableLongArray(nodes, valueAttr)
-                Float::class.java -> return@map newNullableFloatArray(nodes, valueAttr)
-                Double::class.java -> return@map newNullableDoubleArray(nodes, valueAttr)
+                Boolean::class.java -> return@map newNullableBooleanArray(nodes,
+                    valueAttr)
+                Char::class.java -> return@map newNullableCharArray(nodes,
+                    valueAttr)
+                Byte::class.java -> return@map newNullableByteArray(nodes,
+                    valueAttr)
+                Short::class.java -> return@map newNullableShortArray(nodes,
+                    valueAttr)
+                Int::class.java -> return@map newNullableIntArray(nodes,
+                    valueAttr)
+                Long::class.java -> return@map newNullableLongArray(nodes,
+                    valueAttr)
+                Float::class.java -> return@map newNullableFloatArray(nodes,
+                    valueAttr)
+                Double::class.java -> return@map newNullableDoubleArray(nodes,
+                    valueAttr)
                 else -> throw NotPrimitiveException(arrayType.elemClass.java)
               }
             }
@@ -73,7 +82,8 @@ fun <T : Any> newData(rootNodes: Elements, primaryConstructor: KFunction<T>): T 
                 valueAttr.attr)
         if (it.type.jvmErasure.java.isPrimitive) {
           return@map if (it.type.isMarkedNullable) newNullablePrimitive(rawValue,
-              it.type.jvmErasure.java) else newPrimitive(rawValue, it.type.jvmErasure.java)
+              it.type.jvmErasure.java) else newPrimitive(rawValue,
+              it.type.jvmErasure.java)
         }
 
         if (it.type.jvmErasure.java.isAssignableFrom(String::class.java)) {

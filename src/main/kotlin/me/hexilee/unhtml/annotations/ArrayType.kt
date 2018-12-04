@@ -1,4 +1,4 @@
-package me.hexilee.annotations
+package me.hexilee.unhtml.annotations
 
 import kotlin.reflect.KClass
 

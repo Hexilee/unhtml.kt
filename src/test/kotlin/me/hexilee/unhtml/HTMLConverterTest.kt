@@ -1,8 +1,8 @@
-package me.hexilee
+package me.hexilee.unhtml
 
-import me.hexilee.annotations.ArrayType
-import me.hexilee.annotations.Selector
-import me.hexilee.annotations.Value
+import me.hexilee.unhtml.annotations.ArrayType
+import me.hexilee.unhtml.annotations.Selector
+import me.hexilee.unhtml.annotations.Value
 import org.junit.Test
 import org.junit.Assert.*
 

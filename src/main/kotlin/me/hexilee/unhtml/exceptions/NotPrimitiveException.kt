@@ -1,6 +1,5 @@
-package me.hexilee.exceptions
+package me.hexilee.unhtml.exceptions
 
 import java.lang.RuntimeException
-import kotlin.reflect.KClass
 
 class NotPrimitiveException(javaClass: Class<*>): RuntimeException("$javaClass is not primitive")
