@@ -6,10 +6,10 @@ import me.hexilee.unhtml.annotations.Value
 import org.junit.Test
 import org.junit.Assert.*
 
-class HTMLConverterTest {
+class DeserializerTest {
   @Test
   fun simpleDataTest() {
-    val user = HTMLConverter("""<!DOCTYPE html>
+    val user = Deserializer("""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -32,7 +32,7 @@ class HTMLConverterTest {
 
   @Test
   fun embeddedDataTest() {
-    val lecture = HTMLConverter("""<!DOCTYPE html>
+    val lecture = Deserializer("""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -58,7 +58,7 @@ class HTMLConverterTest {
 
   @Test
   fun primitiveArrayTest() {
-    val homePage = HTMLConverter("""<!DOCTYPE html>
+    val homePage = Deserializer("""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -89,7 +89,7 @@ class HTMLConverterTest {
 
   @Test
   fun dataArrayTest() {
-    val userArray = HTMLConverter("""<!DOCTYPE html>
+    val userArray = Deserializer("""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">

@@ -4,7 +4,7 @@ import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import kotlin.reflect.full.primaryConstructor
 
-class HTMLConverter {
+class Deserializer {
   val root: Elements
 
   constructor(src: String) {
